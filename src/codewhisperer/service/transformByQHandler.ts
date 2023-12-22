@@ -234,7 +234,8 @@ export async function stopJob(jobId: string) {
                 result: MetadataResult.Fail,
                 reason: 'StopTransformationFailed',
             })
-            throw new ToolkitError(errorMessage, { cause: e as Error })
+            // TODO: this is not handled by the callers...
+            // throw new ToolkitError(errorMessage, { cause: e as Error })
         }
     }
 }

@@ -255,7 +255,7 @@ export async function startTransformByQ() {
         sessionPlanProgress['returnCode'] = StepProgress.Succeeded
     } catch (error) {
         if (transformByQState.isCancelled()) {
-            stopJob(transformByQState.getJobId())
+            await stopJob(transformByQState.getJobId())
             vscode.window.showErrorMessage(CodeWhispererConstants.transformByQCancelledMessage)
         } else {
             transformByQState.setToFailed()
@@ -344,7 +344,7 @@ export async function confirmStopTransformByQ(
         transformByQState.setToCancelled()
         await vscode.commands.executeCommand('aws.amazonq.refresh')
         vscode.commands.executeCommand('setContext', 'gumby.isStopButtonAvailable', false)
-        stopJob(jobId)
+        await stopJob(jobId)
         telemetry.codeTransform_jobIsCancelledByUser.emit({
             codeTransformCancelSrcComponents: cancelSrc,
             codeTransformSessionId: codeTransformTelemetryState.getSessionId(),
