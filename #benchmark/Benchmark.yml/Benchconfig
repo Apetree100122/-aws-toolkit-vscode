@@ -1,0 +1,91 @@
+# Defaults to true.
+suppress_failure_on_regression: false
+per_dir:
+  worker/dir.+:
+    reg_min: 10
+    imp_min: -15
+  doc/tail.*:
+    reg_min: 5
+    imp_min: -5
+global:
+  reg_min: 10
+  imp_min: -10
+global:
+  reg_min: 10 # A benchmark should increase by more than 10% to be consdered a regression.
+  imp_min: -10
+global:
+  imp_min: -10 # A benchmark should decrease by more than 10% to be considered an improvement.
+  reg_min: 10
+global:
+  benchmarks:
+    SendRecv/msgsize:
+      reg_min: 55
+      imp_min: -20
+    GoParse3339InLocation:
+      reg_min: 5
+      imp_min: -4
+global:
+  dimensions:
+    alloc/op:
+      reg_min: 5
+      imp_min: -2.47
+
+    lost:
+      reg_min: 16.78
+      imp_min: -25.17
+
+    foo:
+      reg_min: 20
+      imp_min: -12
+* if there is no configuration:
+  * default `reg_min` and `imp_min` to 5.
+* else if a `per_dir` rule matches the benchmark's directory:
+  * if any sub-rule in `benchmarks` matches the benchmark's name:
+    * use the matching `benchmarks` sub-rule.
+  * else if `dimensions` sub-rule matches the benchmark's dimension:
+    * use the matching `dimensions` sub-rule.
+  * else use the matching `per_dir` rule.
+* else if a `benchmarks` rule in `global` matches the benchmark's name:
+  * use the matching `benchmarks` rule.
+* else if a `dimensions` rule in `global` matches the benchmark's dimension:
+  * use the matching `dimensions` rule.
+* else:
+  * use the `global` rule.
+  dependencies:
+  services:
+    redis:
+      # Specify the name of the docker image.
+      image: redis
+      # List of container's ports which will be available to the benchmarks at 127.0.0.1:$PORT
+      ports:
+        - 6379
+      # Volume mounts can reference a named volume (defined later) or a path relative to the root of the repository.
+      volumes:
+        # Volume-mounting a file in the repo.
+        - ./dev/redis.conf:/etc/redis/redis.conf
+        # Mounting a named volume.
+        - redis_data:/data
+    postgresql:
+      image: postgres:12
+      ports:
+        - 5432
+      environment:
+        POSTGRES_PASSWORD: supersecure
+        POSTGRES_USER: groot
+        POSTGRES_DB: mydb
+      volumes:
+        - postgres_12_data:/data/pgdata-12
+  # List of named volumes to create.
+  volumes:
+    - redis_data
+    - postgres_12_data
+environment:
+  # It takes a little while for the database to start up on bencher, so wait a bit longer for the DB to start.
+  DB_STARTUP_TIMEOUT: 60s
+  # TODO: change this before launching our product.
+  STORE_PASSWORDS_IN_PLAINTEXT: true
+  # It has numbers so it's secure!
+  ADMIN_PASSWORD: 0r1jt3ch
+  # Why is this even a thing??
+  BECOME_SKYNET_AND_TAKE_OVER_THE_WORLD: false
+
