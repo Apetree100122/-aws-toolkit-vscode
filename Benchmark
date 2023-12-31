@@ -5,56 +5,24 @@ make(<T>, size, capacity)
 #  Slices are the most common representation of items in a 
 # what’s the most performant way of creating a slice? make([]<T>, n)? make([]<T>, 0, n)? or a plain append()?
 # `<a class=“btn btn-light " onclick=“location.href='/starting'”func makeIt(n int) (data []int) {	for i := 0; i < n; i++ {	data = append(data, i)}	return data}`
-
 package makestyles
-
 import "testing"
-
 var sink interface{}
-
 func benchmarkMake(b *testing.B, size int) {for i := 0; i < b.N; i++ {
-		sink = makeIt(size)}
-	if sink == nil {
-		b.Fatal("Benchmark didn't run")
-	}
-}
-
-func BenchmarkMake10(b *testing.B) {
-	benchmarkMake(b, 10)
-}
-
-func BenchmarkMake100(b *testing.B) {
-	benchmarkMake(b, 100)
-}
-
-func BenchmarkMake1000(b *testing.B) {
-	benchmarkMake(b, 1000)
-}
-
-func BenchmarkMake10000(b *testing.B) {
-	benchmarkMake(b, 10000)
-}
-
-func BenchmarkMake100000(b *testing.B) {
-	benchmarkMake(b, 100000)
-}
-
-func BenchmarkMake1000000(b *testing.B) {
-	benchmarkMake(b, 1000000)
-}
+sink = makeIt(size)}
+if sink == nil {b.Fatal("Benchmark didn't run")}}
+func BenchmarkMake10(b *testing.B) {benchmarkMake(b, 10)}
+func BenchmarkMake100(b *testing.B) {	benchmarkMake(b, 100)}
+func BenchmarkMake1000(b *testing.B) {	benchmarkMake(b, 1000)}
+func BenchmarkMake10000(b *testing.B) {	benchmarkMake(b, 10000)}
+func BenchmarkMake100000(b *testing.B) {	benchmarkMake(b, 100000)}
+func BenchmarkMake1000000(b *testing.B) {	benchmarkMake(b, 1000000)}
 diff --git a/makestyles/bench_test.go b/makestyles/bench_test.go
 index 7239d97..5e8305e 100644 --- a/makestyles/bench_test.go +++ b/makestyles/bench_test.go@@ -3,6 +3,7 @@ package makestyles
- import "testing"
- 
- func makeIt(n int) (data []int) { +	data = make([]int, 0, n)
- 	for i := 0; i < n; i++ {
- 		data = append(data, i)
- 	}
-
-
+ import "testing" 
+ func makeIt(n int) (data []int) { +data = make([]int, 0, n)
+for i := 0; i < n; i++ {data = append(data, i)}
 diff --git a/makestyles/bench_test.go b/makestyles/bench_test.go
 index 7239d97..3058f3e 100644--- a/makestyles/bench_test.go+++ b/makestyles/bench_test.go@@ -3,6 +3,7 @@ package makestyles
- import "testing" func makeIt(n int) (data []int) {+	data = make([]int, n)
- 	for i := 0; i < n; i++ {
- 		data[i] = i
- 	}
+ import "testing" func makeIt(n int) (data []int) {+data = make([]int, n)
+ for i := 0; i < n; i++ {data[i] = i	}
