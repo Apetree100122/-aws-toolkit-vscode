@@ -4385,7 +4385,7 @@
         "semver": "^7.5.4",
         "strip-ansi": "^5.2.0",
         "tcp-port-used": "^1.0.1",
-        "typescript": "^5.0.4",
+        "typescript": "^5.3.3",
         "uuid": "^9.0.0",
         "vscode-languageclient": "^6.1.4",
         "vscode-languageserver": "^6.1.1",
